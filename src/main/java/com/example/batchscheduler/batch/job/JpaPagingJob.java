@@ -1,7 +1,7 @@
-package com.example.batchscheduler.batch;
+package com.example.batchscheduler.batch.job;
 
-import com.example.batchscheduler.domain.Dept;
-import com.example.batchscheduler.domain.Dept2;
+import com.example.batchscheduler.domain.dept.Dept;
+import com.example.batchscheduler.domain.dept.Dept2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -21,7 +21,7 @@ import javax.persistence.EntityManagerFactory;
 
 @Slf4j
 @RequiredArgsConstructor
-@Configuration
+//@Configuration
 public class JpaPagingJob {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;

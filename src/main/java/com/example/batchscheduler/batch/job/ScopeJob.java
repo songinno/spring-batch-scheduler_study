@@ -1,4 +1,4 @@
-package com.example.batchscheduler.batch;
+package com.example.batchscheduler.batch.job;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @RequiredArgsConstructor
-@Configuration
+//@Configuration
 public class ScopeJob {
 
     private final JobBuilderFactory jobBuilderFactory;

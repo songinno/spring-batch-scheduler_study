@@ -1,17 +1,16 @@
-package com.example.batchscheduler.domain;
+package com.example.batchscheduler.domain.dept;
 
 import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class Dept {
+public class Dept2 {
 
     @Id
     Integer deptNo;
