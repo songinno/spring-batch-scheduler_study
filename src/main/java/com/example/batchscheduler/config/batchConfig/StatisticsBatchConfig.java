@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.persistence.EntityManagerFactory;
 
 @Slf4j
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class StatisticsBatchConfig {
     private final JobBuilderFactory jobBuilderFactory;
