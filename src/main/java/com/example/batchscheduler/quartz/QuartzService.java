@@ -1,75 +1,45 @@
 package com.example.batchscheduler.quartz;
 
-import com.example.batchscheduler.quartz.job.QuartzJob;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
-import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
-@Configuration
-@RequiredArgsConstructor
-public class QuartzService {
-    private final Scheduler scheduler;
+public interface QuartzService {
+    // * init
+    boolean init();
 
-    @PostConstruct
-    public void init() {
-        try {
-            // ! 스케줄러 초기화 ( + DB clear)
-            scheduler.clear();
-            // ! Job Listener 등록
-            scheduler.getListenerManager().addJobListener(new QuartzJobListener());
-            // ! Trigger Listener 등록
-            scheduler.getListenerManager().addTriggerListener(new QuartzTriggerListener());
+    // * 스케줄러에 스케줄를 등록
+    void register(
+            Class<? extends Job> job,
+            String name,
+            String description,
+            Map params,
+            String cronExp
+    ) throws SchedulerException;
 
-            // ! Job에 필요한 Parameter 생성
-            Map params = new HashMap();
-            // ! Job의 실행 횟수 및 실행 시간
-            params.put("executeCount", 1);
-            params.put("date", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+    // * JobDetail 생성
+    <T extends Job> JobDetail createJobDetail(
+            Class<? extends Job> job,
+            String name,
+            String description,
+            Map params
+    );
 
-            // ! Job 생성 및 Scheduler에 등록
-            addJob(QuartzJob.class, "QuartzJob", "Quartz Job 테스트입니다.", params, "0/10 * * * * ?");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    // * CronTrigger 생성
+    Trigger createCronTrigger(String cronExp);
 
-    // * Job 등록 메서드
-    public <T extends Job> void addJob(Class<? extends Job> job, String name, String desc, Map paramsMap, String cron) throws SchedulerException {
-        JobDetail jobDetail = buildJobDetail(job, name, desc, paramsMap);
-        Trigger trigger = buildCronTrigger(cron);
-        if (scheduler.checkExists(jobDetail.getKey())) {
-            scheduler.deleteJob(jobDetail.getKey());
-        }
-        scheduler.scheduleJob(jobDetail, trigger);
+    // * 스케줄러 시작
+    void start() throws SchedulerException;
 
-    }
+    // * 스케줄러 종료
+    void shutdown() throws SchedulerException, InterruptedException;
 
-    // * JobDetail 생성 메서드
-    public <T extends Job> JobDetail buildJobDetail(Class<? extends Job> job, String name, String desc, Map paramsMap) {
-        JobDataMap jobDataMap = new JobDataMap();
-        jobDataMap.putAll(paramsMap);
+    // * 스케줄러 재시작
+    void restart() throws SchedulerException;
 
-        return JobBuilder
-                .newJob(job)
-                .withIdentity(name)
-                .withDescription(desc)
-                .usingJobData(jobDataMap)
-                .build();
-    }
+    // * 스케줄러 클리어
+    void clear() throws SchedulerException;
 
-    // * Trigger 생성 메서드
-    private Trigger buildCronTrigger(String cronExp) {
-        return TriggerBuilder
-                .newTrigger()
-                .withSchedule(CronScheduleBuilder.cronSchedule(cronExp))
-                .build();
-    }
+    // * Job, Trigger 리스너 등록
+    void addListener(JobListener jobListener, TriggerListener triggerListener) throws SchedulerException;
 }

@@ -1,6 +1,6 @@
-package com.example.batchscheduler.batch.schedule;
+package com.example.batchscheduler.batch;
 
-import com.example.batchscheduler.config.batchConfig.StatisticsBatchConfig;
+import com.example.batchscheduler.config.batchConfig.StatisticsBatchJobConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -11,14 +11,13 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 //@Component
 @RequiredArgsConstructor
-public class StatisticsBatchSchedule {
+public class BatchJobStarter {
     private final JobLauncher jobLauncher;
-    private final StatisticsBatchConfig batchConfig;
+    private final StatisticsBatchJobConfig batchConfig;
     private final JobExplorer jobExplorer; // # 메타 테이블에 대한 read only 쿼리 기능을 위한 인터페이스 -> run.id에 대한 메타테이블 접근 가능해짐
 
     @Scheduled(cron = "0/10 * * * * ?") // # 10초마다 Job 실행

@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
+//@Component
 @PersistJobDataAfterExecution // # Job 동작 중 JobDataMap을 변경할 경우 사용
-@DisallowConcurrentExecution
+@DisallowConcurrentExecution // # Job 수행 도중, Job이 병렬적으로 실행되는 것을 막아주는 기능 (클러스터링 환경에서는 애너테이션 작동X)
 public class QuartzJob implements Job {
 
-    @Autowired
+//    @Autowired
     private MarketRepository marketRepository;
 
     @Override
